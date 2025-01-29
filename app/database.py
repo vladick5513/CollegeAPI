@@ -1,14 +1,20 @@
 from datetime import datetime
 from typing import Annotated
 from sqlalchemy import func
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from sqlalchemy.orm import DeclarativeBase, mapped_column
-
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
+from sqlalchemy.orm import DeclarativeBase, mapped_column, declared_attr, Mapped
 from app.config import settings
 
 
-class Base(DeclarativeBase):
-    pass
+class Base(AsyncAttrs, DeclarativeBase):
+    __abstract__ = True
+
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
+        return f"{cls.__name__.lower()}s"
+
+    created_at: Mapped[created_at]
+    update_at: Mapped[update_at]
 
 async_engine = create_async_engine(
     url=settings.DATABASE_URL_asyncpg,
