@@ -1,9 +1,7 @@
-from datetime import date
-
-from sqlalchemy import Text, ForeignKey
+from sqlalchemy import ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from app.database import Base, int_pk, str_uniq, str_null_true
+from app.database import Base, str_uniq, int_pk, str_null_true
+from datetime import date
 
 
 class Student(Base):
@@ -20,6 +18,7 @@ class Student(Base):
     major_id: Mapped[int] = mapped_column(ForeignKey("majors.id"), nullable=False)
 
     major: Mapped["Major"] = relationship("Major", back_populates="students")
+    extend_existing = True
 
 
     def __str__(self):
