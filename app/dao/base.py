@@ -29,7 +29,7 @@ class BaseDAO:
             return result.scalars().all()
 
     @classmethod
-    async def add(cls, values):
+    async def add(cls, **values):
         async with async_session_factory() as session:
             async with session.begin():
                 new_instance = cls.model(**values)
@@ -76,7 +76,7 @@ class BaseDAO:
     async def delete(cls, delete_all: bool = False, **filter_by):
         if delete_all is False:
             if not filter_by:
-                raise ValueError("Необходимо указать хотябы один парамтр для удаления.")
+                raise ValueError("Необходимо указать хотя бы один параметр для удаления.")
 
         async with async_session_factory() as session:
             async with session.begin():
