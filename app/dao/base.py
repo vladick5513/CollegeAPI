@@ -70,7 +70,7 @@ class BaseDAO:
                 except SQLAlchemyError as e:
                     await session.rollback()
                     raise e
-                return result.rowcount()
+                return result.rowcount
 
     @classmethod
     async def delete(cls, delete_all: bool = False, **filter_by):
