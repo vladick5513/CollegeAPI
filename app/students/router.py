@@ -31,3 +31,12 @@ async def add_student(student: SStudentAdd) -> dict:
         return {"message": "Студент успешно добавлен!", "student": student}
     else:
         return {"message": "Ошибка при добавлении студента!"}
+
+@router.delete("/delete/{student_id}")
+async def dell_student_by_id(student_id: int) -> dict:
+    check = await StudentDAO.delete_student_by_id(student_id=student_id)
+    if check:
+        return {"message": f"Студент с ID {student_id} удален!"}
+    else:
+        return {"message": "Ошибка при удалении студента!"}
+
