@@ -32,6 +32,8 @@ class StudentDAO(BaseDAO):
             student_data = student_info.to_dict()
             student_data["major"] = student_info.major.major_name
             return student_data
+
+
     @classmethod
     async def add_student(cls, **student_data: dict):
         async with async_session_factory() as session:
@@ -42,3 +44,21 @@ class StudentDAO(BaseDAO):
                 new_student_id = new_student.id
                 await session.commit()
                 return new_student_id
+
+    @classmethod
+    async def delete_student_by_id(cls, student_id: int):
+        async with async_session_factory() as session:
+            async with session.begin():
+                query = select(cls.model).filter_by(id=student_id)
+                result = await session.execute(query)
+                student_to_delete = result.scalar_one_or_none()
+
+                if not student_to_delete:
+                    return None
+
+                await session.execute(
+                    delete(cls.model).filter_by(id=student_id)
+                )
+
+                await session.commit()
+                return student_id
